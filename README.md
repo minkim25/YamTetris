@@ -15,4 +15,5 @@
 ???
 
 	6. Finish everything. Jan 12th
-Publish to store.
+	
+	7. Publish to store.
