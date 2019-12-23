@@ -1,19 +1,18 @@
 # yam_tetris
-<b>Current master plan:</b>
+<b>Possible Inputs:</b>
 
-	1. Make private github project December 14th (done)
-  
-	2. download unity  December 14th (done)
-	
-    3. Make tetris. December 20th 
-		a. Following Course Era Vids (C# and unity) 
-		
-	4. Learn unity reinforcement learning tutorials 
-		a. Follow Course Era Vids 
+- current block shape (among all 4 possible shapes)
+- current block position
+- bumpiness (the array of the box numbers in each column)
+	(ex: [1,2,0,5,7,2,4,2,1,0])
+- number of holes (or + their position)
+- the highest height of the current columns
+- next shape?
 
-		
-???
+<b>Next Meeting</b>
 
-	6. Finish everything. Jan 12th
-	
-	7. Publish to store.
+12/27 2PM PST, 5PM EST
+
+<b>HW</b>
+
+test git, finish lectures, read articles, think about q-learning
