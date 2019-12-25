@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class GameController : MonoBehaviour {
 
@@ -44,6 +45,11 @@ public class GameController : MonoBehaviour {
 
 	public bool m_isPaused = false;
 	public GameObject m_pausePanel;
+
+
+	public bool m_onAI = false;
+	public IconToggle m_autoIconToggle;
+	bool m_autoClockwise = true;
 
 
 	// Use this for initialization
@@ -98,7 +104,32 @@ public class GameController : MonoBehaviour {
 		if (!m_gameBoard || !m_spawner || !m_activeShape || m_gameOver || !m_soundManager || !m_scoreManager) {
 			return;
 		}
-		PlayerInput ();
+
+		if (m_onAI) {
+			//code for AUTO PLAY
+			//Debug.Log ("AI turned on");
+
+			//we can initially use this for training
+			TrainAI ();
+
+			//once we finish training, we can use the below function for the actual AUTO PLAY mode
+			//PlayAI ();
+
+		} else {
+			PlayerInput ();
+		}
+	}
+
+	void TrainAI() {
+
+
+		//save final model
+	}
+
+	void PlayAI() {
+		//load saved model
+
+
 	}
 
 	void PlaySound (AudioClip clip, float volMultiplier)
@@ -147,7 +178,34 @@ public class GameController : MonoBehaviour {
 			} else {
 				PlaySound (m_soundManager.m_moveSound,0.5f);
 			}
+		
 		} else if ((Input.GetButton("MoveDown") && (Time.time > m_timeToNextKeyDown)) || (Time.time > m_timeToDrop)) {
+			m_timeToDrop = Time.time + m_dropIntervalModded;
+			m_timeToNextKeyDown = Time.time + m_keyRepeatRateDown;
+			m_activeShape.MoveDown ();
+
+			if (!m_gameBoard.IsValidPosition (m_activeShape)) {
+				if (m_gameBoard.IsOverLimit (m_activeShape)) {
+					GameOver ();
+				} else {
+					LandShape ();
+				}
+			}
+
+		/* probably we can use the below code in place of the above one if we decide to allow the users to control the blocks while on AUTO mode
+		} else if ((!m_onAI) && ((Input.GetButton("MoveDown") && (Time.time > m_timeToNextKeyDown)) || (Time.time > m_timeToDrop))) {
+			m_timeToDrop = Time.time + m_dropIntervalModded;
+			m_timeToNextKeyDown = Time.time + m_keyRepeatRateDown;
+			m_activeShape.MoveDown ();
+
+			if (!m_gameBoard.IsValidPosition (m_activeShape)) {
+				if (m_gameBoard.IsOverLimit (m_activeShape)) {
+					GameOver ();
+				} else {
+					LandShape ();
+				}
+			}
+		} else if (m_onAI && Input.GetButton("MoveDown") && (Time.time > m_timeToNextKeyDown)) {
 
 			m_timeToDrop = Time.time + m_dropIntervalModded;
 			m_timeToNextKeyDown = Time.time + m_keyRepeatRateDown;
@@ -160,6 +218,8 @@ public class GameController : MonoBehaviour {
 					LandShape ();
 				}
 			}
+		*/
+
 		} else if (Input.GetButtonDown("MoveDownHard") && Time.time > m_timeToNextKeyDown) {
 
 			m_timeToDrop = Time.time + m_dropIntervalModded;
@@ -176,7 +236,6 @@ public class GameController : MonoBehaviour {
 					LandShape ();
 				}
 			}
-
 		} else if (Input.GetButtonDown("ToggleRot")) {
 			ToggleRotDirection ();
 		} else if (Input.GetButtonDown("Pause")) {
@@ -292,6 +351,15 @@ public class GameController : MonoBehaviour {
 
 		if (m_ghost) {
 			m_ghost.Reset ();
+		}
+	}
+
+	public void ToggleAuto() {
+		m_onAI = !m_onAI;
+		m_autoClockwise = !m_autoClockwise;
+
+		if (m_autoIconToggle) {
+			m_autoIconToggle.ToggleIcon (m_autoClockwise);
 		}
 	}
 
