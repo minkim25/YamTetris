@@ -236,7 +236,102 @@ public class GameController : MonoBehaviour {
 					LandShape ();
 				}
 			}
-		} else if (Input.GetButtonDown("ToggleRot")) {
+		}
+
+        else if (Input.GetButtonDown("PathMakerTest") && Time.time > m_timeToNextKeyDown)
+        {
+
+            m_timeToDrop = Time.time + m_dropIntervalModded;
+            m_timeToNextKeyDown = Time.time + m_keyRepeatRateDown;
+
+
+            // hardcoded auto-path's output for testing purposes: ['rotate' 'rotate' 'right' 'right' 'right' 'hard-down']
+
+            //rotate
+            m_activeShape.RotateClockwise(m_clockwise);
+            if (!m_gameBoard.IsValidPosition(m_activeShape))
+            {
+                m_activeShape.RotateClockwise(!m_clockwise);
+                PlaySound(m_soundManager.m_errorSound, 0.5f);
+            }
+            else
+            {
+                PlaySound(m_soundManager.m_moveSound, 0.5f);
+            }
+
+            //rotate
+            m_activeShape.RotateClockwise(m_clockwise);
+            if (!m_gameBoard.IsValidPosition(m_activeShape))
+            {
+                m_activeShape.RotateClockwise(!m_clockwise);
+                PlaySound(m_soundManager.m_errorSound, 0.5f);
+            }
+            else
+            {
+                PlaySound(m_soundManager.m_moveSound, 0.5f);
+            }
+
+            //right
+            m_activeShape.MoveRight();
+            if (!m_gameBoard.IsValidPosition(m_activeShape))
+            {
+                m_activeShape.MoveLeft();
+                PlaySound(m_soundManager.m_errorSound, 0.5f);
+            }
+            else
+            {
+                PlaySound(m_soundManager.m_moveSound, 0.5f);
+            }
+
+            //right
+            m_activeShape.MoveRight();
+            if (!m_gameBoard.IsValidPosition(m_activeShape))
+            {
+                m_activeShape.MoveLeft();
+                PlaySound(m_soundManager.m_errorSound, 0.5f);
+            }
+            else
+            {
+                PlaySound(m_soundManager.m_moveSound, 0.5f);
+            }
+
+            //right
+            m_activeShape.MoveRight();
+            if (!m_gameBoard.IsValidPosition(m_activeShape))
+            {
+                m_activeShape.MoveLeft();
+                PlaySound(m_soundManager.m_errorSound, 0.5f);
+            }
+            else
+            {
+                PlaySound(m_soundManager.m_moveSound, 0.5f);
+            }
+
+            // hard-down
+            while (m_gameBoard.IsValidPosition(m_activeShape))
+            {
+                m_activeShape.MoveDown();
+            }
+
+
+
+            if (!m_gameBoard.IsValidPosition(m_activeShape))
+            {
+                if (m_gameBoard.IsOverLimit(m_activeShape))
+                {
+                    GameOver();
+                }
+                else
+                {
+                    LandShape();
+                }
+            }
+        }
+
+        
+
+
+        else if (Input.GetButtonDown("ToggleRot")) {
 			ToggleRotDirection ();
 		} else if (Input.GetButtonDown("Pause")) {
 			TogglePause ();
