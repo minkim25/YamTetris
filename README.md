@@ -16,3 +16,5 @@
 <b>HW</b>
 
 test git, finish lectures, read articles, think about q-learning
+
+<img src="TetrisRepresentation.png">
