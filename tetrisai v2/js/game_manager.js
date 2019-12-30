@@ -152,7 +152,8 @@ function GameManager(){
             }
 
             var row = workingPiece.getTypeEncoding().concat(outputGrid).concat(workingPiece.getRotationEncoding()).concat(workingPiece.getXPosEncoding());
-            console.log(row);
+            console.log("rotencode" + workingPiece.getRotationEncoding());
+            console.log("posencode" + workingPiece.getXPosEncoding());
 
             if(newBlob){
                 blob = appendToBlob(row);
@@ -282,7 +283,10 @@ function GameManager(){
     }
 
     function RestartGame(){
-        exportToCsv("tetris_data.csv", blob);
+        if (blob){
+            exportToCsv("tetris_data.csv", blob);
+        }
+        
         blob=null;
         gravityTimer.stop();
         cancelWorkingPieceDropAnimation();

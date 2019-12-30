@@ -7,6 +7,8 @@ function AI(heightWeight, linesWeight, holesWeight, bumpinessWeight){
 
 AI.prototype._best = function(grid, workingPieces, workingPieceIndex){
     var best = null;
+    var bestRot = null;
+    var bestXPos = null;
     var bestScore = null;
     var workingPiece = workingPieces[workingPieceIndex];
 
@@ -17,7 +19,6 @@ AI.prototype._best = function(grid, workingPieces, workingPieceIndex){
         }
 
         while(_piece.moveLeft(grid));
-        currCol = 1;
 
         while(grid.valid(_piece)){
             var _pieceSet = _piece.clone();
@@ -35,19 +36,24 @@ AI.prototype._best = function(grid, workingPieces, workingPieceIndex){
 
             if (score > bestScore || bestScore == null){
                 bestScore = score;
+                bestRot = rotation;
+                bestXPos = _piece.column + 1;
                 best = _piece.clone();
                 best.type = _piece.type;
-                best.best_rotation = rotation;
-                best.best_xpos = currCol;
             }
 
             _piece.column++;
-            currCol++;
         }
     }
-    return {piece:best, score:bestScore};
+    console.log("rotation" + bestRot);
+    return {piece:best, score:bestScore, bestRot:bestRot, bestXPos:bestXPos};
 };
 
 AI.prototype.best = function(grid, workingPieces){
-    return this._best(grid, workingPieces, 0).piece;
+    best_piece = this._best(grid, workingPieces, 0).piece;
+    best_piece.best_rotation = this._best(grid, workingPieces, 0).bestRot;
+    best_piece.best_xpos = this._best(grid, workingPieces, 0).bestXPos;
+    console.log("rot" + best_piece.best_rotation);
+    console.log("xpos" + best_piece.best_xpos);
+    return best_piece;
 };
