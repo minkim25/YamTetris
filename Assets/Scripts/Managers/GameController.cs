@@ -289,12 +289,20 @@ public class GameController : MonoBehaviour {
 			PlaySound (m_soundManager.m_clearRowSound, 0.5f);
 		}
 
+
+		m_gridArray = m_gameBoard.GetGridArray ();
+
+		/* test calls
 		int test_c_h = 0;
 		int test_hole = 0;
-		m_gridArray = m_gameBoard.GetGridArray ();
+		int test_total_h = 0;
+		int test_bump = 0;
 		test_c_h = m_gameBoard.GetColumnBlockHeight (4); // 5th column
 		test_hole = m_gameBoard.GetHoleCount();
-
+		test_total_h = m_gameBoard.GetTotalHeight ();
+		test_bump = m_gameBoard.GetBumpiness ();
+		m_gameBoard.m_completedRows
+		*/
 
 	}
 

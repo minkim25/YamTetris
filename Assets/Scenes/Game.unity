@@ -2143,7 +2143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_level: 1
-  m_linesPerLevel: 5
+  m_linesPerLevel: 3
   m_linesText: {fileID: 1337307201}
   m_levelText: {fileID: 1727478434}
   m_scoreText: {fileID: 1107237628}
@@ -3899,7 +3899,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 5
+  m_Text: 1
 --- !u!222 &1337307202
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4965,7 +4965,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 5
+  m_Text: 1
 --- !u!222 &1727478435
 CanvasRenderer:
   m_ObjectHideFlags: 0

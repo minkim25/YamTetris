@@ -192,8 +192,38 @@ public class Board : MonoBehaviour {
 		return hole;
 	}
 
+	public int GetTotalHeight() {
+		int total = 0;
+
+		for (int x = 0; x < m_width; x++) {
+			total += GetColumnBlockHeight (x);
+		}
+		//Debug.Log (total);
+
+		return total;
+	}
+
+	public int GetBumpiness() {
+		int b = 0;
+		int temp1 = 0;
+		int temp2 = 0;
+
+		for (int x = 0; x < m_width-1; x++) {
+			temp1 = GetColumnBlockHeight (x);
+			temp2 = GetColumnBlockHeight (x+1);
+
+			if (temp1 > temp2) {
+				b += temp1 - temp2;
+			} else {
+				b += temp2 - temp1;
+			}
+		}
+		//Debug.Log (b);
+
+		return b;
+	}
+
 
 
 
 }
-// git test from matt

@@ -9,7 +9,7 @@ public class ScoreManager : MonoBehaviour {
 	int m_lines;
 	public int m_level = 1;
 
-	public int m_linesPerLevel = 3;
+	public int m_linesPerLevel = 5;
 	const int m_minLines = 1;
 	const int m_maxLines = 4;
 
