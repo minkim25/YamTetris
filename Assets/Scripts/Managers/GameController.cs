@@ -52,6 +52,9 @@ public class GameController : MonoBehaviour {
 	bool m_autoClockwise = true;
 
 
+	public int[,] m_gridArray;
+
+
 	// Use this for initialization
 	void Start () {
 
@@ -96,7 +99,8 @@ public class GameController : MonoBehaviour {
 		}
 
 		m_dropIntervalModded = m_dropInterval;
-			
+
+		m_gridArray = m_gameBoard.GetGridArray ();
 	}
 
 	// Update is called once per frame
@@ -284,6 +288,14 @@ public class GameController : MonoBehaviour {
 
 			PlaySound (m_soundManager.m_clearRowSound, 0.5f);
 		}
+
+		int test_c_h = 0;
+		int test_hole = 0;
+		m_gridArray = m_gameBoard.GetGridArray ();
+		test_c_h = m_gameBoard.GetColumnBlockHeight (4); // 5th column
+		test_hole = m_gameBoard.GetHoleCount();
+
+
 	}
 
 	void GameOver ()

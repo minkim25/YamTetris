@@ -132,5 +132,68 @@ public class Board : MonoBehaviour {
 
 		return false;
 	}
+
+
+	public int[,] GetGridArray() {
+		int [,] g_array = new int[m_height - m_header,m_width];
+		string arrayString = "";
+
+		for (int y = 0; y < m_height - m_header; y++) {
+			for (int x = 0; x < m_width; x++) {
+				if (m_grid [x, y] == null) {
+					g_array [m_height - m_header - 1 - y,x] = 0;
+				} else {
+					g_array [m_height - m_header - 1 - y,x] = 1;
+				}
+			}
+		} 
+
+		for (int i = 0; i < m_height - m_header; i++)
+		{
+			for (int j = 0; j < m_width; j++)
+			{
+				arrayString += string.Format("{0} ", g_array[i, j]);
+			}
+			arrayString += System.Environment.NewLine;
+		}
+		Debug.Log(arrayString);
+
+		return g_array;
+	}
+
+	public int GetColumnBlockHeight(int col) {
+		int h = 0;
+
+		for (int y = 1; y <= m_height - m_header; y++) {
+			if (m_grid [col, y-1] != null && y > h) {
+				h = y;
+			}
+		}
+		//Debug.Log (h);
+
+		return h;
+	}
+
+	public int GetHoleCount() {
+		int height = 0;
+		int hole = 0;
+
+		for (int x = 0; x < m_width; x++) {
+			height = GetColumnBlockHeight (x);
+
+			for (int y = 0; y < height; y++) {
+				if (m_grid [x, y] == null) {
+					hole++;
+				}
+			}
+		}
+		//Debug.Log (hole);
+
+		return hole;
+	}
+
+
+
+
 }
 // git test from matt
