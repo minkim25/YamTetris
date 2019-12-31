@@ -52,6 +52,8 @@ public class GameController : MonoBehaviour {
 	bool m_autoClockwise = true;
 
 
+	int m_currentOffset;
+
 	public int[,] m_gridArray;
 
 
@@ -175,13 +177,45 @@ public class GameController : MonoBehaviour {
 			}
 		}
 		else if (Input.GetButtonDown ("Rotate") && Time.time > m_timeToNextKeyRotate) {
-			//m_activeShape.RotateRight ();
 			m_activeShape.RotateClockwise(m_clockwise);
 			m_timeToNextKeyRotate = Time.time + m_keyRepeatRateRotate;
-			if (!m_gameBoard.IsValidPosition (m_activeShape)) {
-				//m_activeShape.RotateLeft ();
+			m_currentOffset = 0;
+
+			if (!m_gameBoard.IsValidPosBoard (m_activeShape)) {
+				//m_activeShape.RotateClockwise(!m_clockwise);
+				m_currentOffset = m_gameBoard.CalcOffsetBoard (m_activeShape);
+
+				if (m_currentOffset == 0) {
+					//m_activeShape.RotateClockwise (!m_clockwise);
+				} else if (m_currentOffset > 0 && m_currentOffset < 10) {
+					m_activeShape.MoveLeft ();
+				} else if (m_currentOffset > 10) {
+					m_activeShape.MoveLeft ();
+					m_activeShape.MoveLeft ();
+				} else if (m_currentOffset < 0 && m_currentOffset > -10) {
+					m_activeShape.MoveRight ();
+				} else if (m_currentOffset < -10) {
+					m_activeShape.MoveRight ();
+					m_activeShape.MoveRight ();
+				}
+			}
+					
+			if (!m_gameBoard.IsValidPosOccupied (m_activeShape)) {
+				if (m_currentOffset == 0) {
+					//m_activeShape.RotateClockwise(!m_clockwise);
+				} else if (m_currentOffset > 0 && m_currentOffset < 10) {
+					m_activeShape.MoveRight ();
+				} else if (m_currentOffset > 10) {
+					m_activeShape.MoveRight ();
+					m_activeShape.MoveRight ();
+				} else if (m_currentOffset < 0 && m_currentOffset > -10) {
+					m_activeShape.MoveLeft ();
+				} else if (m_currentOffset < -10) {
+					m_activeShape.MoveLeft ();
+					m_activeShape.MoveLeft ();
+				}
 				m_activeShape.RotateClockwise(!m_clockwise);
-				PlaySound (m_soundManager.m_errorSound,0.5f);
+				PlaySound (m_soundManager.m_errorSound, 0.5f);
 			} else {
 				PlaySound (m_soundManager.m_moveSound,0.5f);
 			}
@@ -200,6 +234,7 @@ public class GameController : MonoBehaviour {
 			}
 
 		/* probably we can use the below code in place of the above one if we decide to allow the users to control the blocks while on AUTO mode
+		 * 
 		} else if ((!m_onAI) && ((Input.GetButton("MoveDown") && (Time.time > m_timeToNextKeyDown)) || (Time.time > m_timeToDrop))) {
 			m_timeToDrop = Time.time + m_dropIntervalModded;
 			m_timeToNextKeyDown = Time.time + m_keyRepeatRateDown;
