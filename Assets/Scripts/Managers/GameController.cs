@@ -88,6 +88,9 @@ public class GameController : MonoBehaviour {
 			m_spawner.transform.position = Vectorf.Round (m_spawner.transform.position);
 			if (m_activeShape == null) {
 				m_activeShape = m_spawner.SpawnShape ();
+				if (m_activeShape.name == m_spawner.m_allShapes[3].name+"(Clone)") {
+					m_activeShape.MoveRight ();
+				}
 			}
 		}
 
@@ -264,6 +267,9 @@ public class GameController : MonoBehaviour {
 		}
 
 		m_activeShape = m_spawner.SpawnShape ();
+		if (m_activeShape.name == m_spawner.m_allShapes[3].name+"(Clone)") {
+			m_activeShape.MoveRight ();
+		}
 
 		m_timeToNextKeyLeftRight = Time.time;
 		m_timeToNextKeyDown = Time.time;
@@ -288,7 +294,6 @@ public class GameController : MonoBehaviour {
 
 			PlaySound (m_soundManager.m_clearRowSound, 0.5f);
 		}
-
 
 		m_gridArray = m_gameBoard.GetGridArray ();
 
@@ -357,6 +362,9 @@ public class GameController : MonoBehaviour {
 		if (!m_holder.m_heldShape) {
 			m_holder.Catch (m_activeShape);
 			m_activeShape = m_spawner.SpawnShape ();
+			if (m_activeShape.name == m_spawner.m_allShapes[3].name+"(Clone)") {
+				m_activeShape.MoveRight ();
+			}
 			PlaySound (m_soundManager.m_holdSound, 0.5f);
 		} else if (m_holder.m_canRelease) {
 			Shape shape = m_activeShape;
