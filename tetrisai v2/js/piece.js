@@ -18,30 +18,33 @@ Piece.fromIndex = function(index){
                 [0x0000AA, 0x0000AA],
                 [0x0000AA, 0x0000AA]
             ], 'O');
+            piece.column = 4;
             break;
         case 1: // J
-            piece = new Piece([
-                [0xC0C0C0, 0x000000, 0x000000],
-                [0xC0C0C0, 0xC0C0C0, 0xC0C0C0],
-                [0x000000, 0x000000, 0x000000]
-            ], 'J');
             // piece = new Piece([
-            //     [0x000000, 0xC0C0C0, 0x000000],
-            //     [0x000000, 0xC0C0C0, 0x000000],
-            //     [0xC0C0C0, 0xC0C0C0, 0x000000]
+            //     [0xC0C0C0, 0x000000, 0x000000],
+            //     [0xC0C0C0, 0xC0C0C0, 0xC0C0C0],
+            //     [0x000000, 0x000000, 0x000000]
             // ], 'J');
+            piece = new Piece([
+                [0x000000, 0xC0C0C0, 0x000000],
+                [0x000000, 0xC0C0C0, 0x000000],
+                [0xC0C0C0, 0xC0C0C0, 0x000000]
+            ], 'J');
+            piece.column = 3;
             break;
         case 2: // L
-            piece = new Piece([
-                [0x000000, 0x000000, 0xAA00AA],
-                [0xAA00AA, 0xAA00AA, 0xAA00AA],
-                [0x000000, 0x000000, 0x000000]
-            ], 'L');
             // piece = new Piece([
-            //     [0xAA00AA, 0x000000, 0x000000],
-            //     [0xAA00AA, 0x000000, 0x000000],
-            //     [0xAA00AA, 0xAA00AA, 0x000000]
+            //     [0x000000, 0x000000, 0xAA00AA],
+            //     [0xAA00AA, 0xAA00AA, 0xAA00AA],
+            //     [0x000000, 0x000000, 0x000000]
             // ], 'L');
+            piece = new Piece([
+                [0x000000, 0xAA00AA, 0x000000],
+                [0x000000, 0xAA00AA, 0x000000],
+                [0x000000, 0xAA00AA, 0xAA00AA]
+            ], 'L');
+            piece.column = 3;
             break;
         case 3: // Z
             piece = new Piece([
@@ -49,20 +52,23 @@ Piece.fromIndex = function(index){
                 [0x000000, 0x00AAAA, 0x00AAAA],
                 [0x000000, 0x000000, 0x000000]
             ], 'Z');
+            piece.column = 3;
             break;
         case 4: // S
             piece = new Piece([
+                [0x000000, 0x000000, 0x000000],
                 [0x000000, 0x00AA00, 0x00AA00],
-                [0x00AA00, 0x00AA00, 0x000000],
-                [0x000000, 0x000000, 0x000000]
+                [0x00AA00, 0x00AA00, 0x000000]
             ], 'S');
+            piece.column = 3;
             break;
         case 5: // T
             piece = new Piece([
-                [0x000000, 0xAA5500, 0x000000],
+                [0x000000, 0x000000, 0x000000],
                 [0xAA5500, 0xAA5500, 0xAA5500],
-                [0x000000, 0x000000, 0x000000]
+                [0x000000, 0xAA5500, 0x000000]
             ], 'T');
+            piece.column = 3;
             // piece = new Piece([
             //     [0xAA5500, 0xAA5500, 0xAA5500],
             //     [0x000000, 0xAA5500, 0x000000],
@@ -71,11 +77,13 @@ Piece.fromIndex = function(index){
             break;
         case 6: // I
             piece = new Piece([
-                [0x000000, 0x000000, 0x000000, 0x000000],
-                [0xAA0000, 0xAA0000, 0xAA0000, 0xAA0000],
-                [0x000000, 0x000000, 0x000000, 0x000000],
-                [0x000000, 0x000000, 0x000000, 0x000000]
+                [0x000000, 0x000000, 0xAA0000, 0x000000, 0x000000],
+                [0x000000, 0x000000, 0xAA0000, 0x000000, 0x000000],
+                [0x000000, 0x000000, 0xAA0000, 0x000000, 0x000000],
+                [0x000000, 0x000000, 0xAA0000, 0x000000, 0x000000],
+                [0x000000, 0x000000, 0x000000, 0x000000, 0x000000]
             ], 'I');
+            piece.column = 2;
             // piece = new Piece([
             //     [0xAA0000, 0x000000, 0x000000, 0x000000],
             //     [0xAA0000, 0x000000, 0x000000, 0x000000],
@@ -86,7 +94,7 @@ Piece.fromIndex = function(index){
 
     }
     piece.row = 0;
-    piece.column = Math.floor((10 - piece.dimension) / 2); // Centralize
+    //piece.column = Math.floor((10 - piece.dimension) / 2); // Centralize
     return piece;
 };
 
@@ -172,6 +180,20 @@ Piece.prototype.getXPosEncoding = function(){
       break;
   }
   return posVec;
+}
+
+Piece.prototype.setBestXPos = function(col){
+  switch(this.dimension){
+    case 2:
+      this.best_xpos = col + 1;
+      break;
+    case 3:
+      this.best_xpos = col + 2;
+      break;
+    case 5: 
+      this.best_xpos = col + 3;
+      break;
+  }
 }
 
 Piece.prototype.clone = function(){
@@ -304,6 +326,37 @@ Piece.prototype.rotateCells = function(){
               _cells[1][2] = this.cells[1][1];
               _cells[2][2] = this.cells[1][2];
               _cells[2][1] = this.cells[2][2];
+              break;
+            case 5:
+              _cells[0][0] = this.cells[4][0];
+              _cells[0][1] = this.cells[3][0];
+              _cells[0][2] = this.cells[2][0];
+              _cells[0][3] = this.cells[1][0];
+              _cells[0][4] = this.cells[0][0];
+
+              _cells[1][0] = this.cells[4][1];
+              _cells[1][1] = this.cells[3][1];
+              _cells[1][2] = this.cells[2][1];
+              _cells[1][3] = this.cells[1][1];
+              _cells[1][4] = this.cells[0][1];
+
+              _cells[2][0] = this.cells[4][2];
+              _cells[2][1] = this.cells[3][2];
+              _cells[2][2] = this.cells[2][2];
+              _cells[2][3] = this.cells[1][2];
+              _cells[2][4] = this.cells[0][2];
+
+              _cells[3][0] = this.cells[4][3];
+              _cells[3][1] = this.cells[3][3];
+              _cells[3][2] = this.cells[2][3];
+              _cells[3][3] = this.cells[1][3];
+              _cells[3][4] = this.cells[0][3];
+
+              _cells[4][0] = this.cells[4][4];
+              _cells[4][1] = this.cells[3][4];
+              _cells[4][2] = this.cells[2][4];
+              _cells[4][3] = this.cells[1][4];
+              _cells[4][4] = this.cells[0][4];
               break;
       }
 

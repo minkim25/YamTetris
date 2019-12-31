@@ -152,8 +152,8 @@ function GameManager(){
             }
 
             var row = workingPiece.getTypeEncoding().concat(outputGrid).concat(workingPiece.getRotationEncoding()).concat(workingPiece.getXPosEncoding());
-            console.log("rotencode" + workingPiece.getRotationEncoding());
-            console.log("posencode" + workingPiece.getXPosEncoding());
+            //console.log("rotencode" + workingPiece.getRotationEncoding());
+            //console.log("posencode" + workingPiece.getXPosEncoding());
 
             if(newBlob){
                 blob = appendToBlob(row);

@@ -37,7 +37,7 @@ AI.prototype._best = function(grid, workingPieces, workingPieceIndex){
             if (score > bestScore || bestScore == null){
                 bestScore = score;
                 bestRot = rotation;
-                bestXPos = _piece.column + 1;
+                bestXPos = _piece.column;
                 best = _piece.clone();
                 best.type = _piece.type;
             }
@@ -45,15 +45,13 @@ AI.prototype._best = function(grid, workingPieces, workingPieceIndex){
             _piece.column++;
         }
     }
-    console.log("rotation" + bestRot);
     return {piece:best, score:bestScore, bestRot:bestRot, bestXPos:bestXPos};
 };
 
 AI.prototype.best = function(grid, workingPieces){
-    best_piece = this._best(grid, workingPieces, 0).piece;
-    best_piece.best_rotation = this._best(grid, workingPieces, 0).bestRot;
-    best_piece.best_xpos = this._best(grid, workingPieces, 0).bestXPos;
-    console.log("rot" + best_piece.best_rotation);
-    console.log("xpos" + best_piece.best_xpos);
+    best = this._best(grid, workingPieces, 0)
+    best_piece = best.piece;
+    best_piece.best_rotation = best.bestRot;
+    best_piece.setBestXPos(best.bestXPos);
     return best_piece;
 };
