@@ -45,8 +45,48 @@ public class Board : MonoBehaviour {
 				return false;
 			}
 		}
-
 		return true;
+	}
+
+	public bool IsValidPosBoard(Shape shape) {
+		foreach (Transform child in shape.transform) {
+			Vector2 pos = Vectorf.Round (child.position);
+
+			if (!IsWithinBoard ((int)pos.x, (int)pos.y)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public bool IsValidPosOccupied(Shape shape) {
+		foreach (Transform child in shape.transform) {
+			Vector2 pos = Vectorf.Round (child.position);
+
+			if (IsOccupied ((int)pos.x, (int)pos.y, shape)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public int CalcOffsetBoard(Shape shape) {
+		int w_offset = 0;
+
+		foreach (Transform child in shape.transform) {
+			Vector2 pos = Vectorf.Round (child.position);
+
+			if ((int)pos.x == -1) {
+				w_offset -= 1;
+			} else if ((int)pos.x == -2) {
+				w_offset -= 10;
+			} else if ((int)pos.x == m_width) {
+				w_offset += 1;
+			} else if ((int)pos.x == m_width+1) {
+				w_offset += 10;
+			}
+		}
+		return w_offset;
 	}
 
 	void DrawEmptyCells(){
