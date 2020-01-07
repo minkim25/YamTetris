@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
@@ -45,6 +46,9 @@ public class GameController : MonoBehaviour {
 
 	public bool m_isPaused = false;
 	public GameObject m_pausePanel;
+
+	public bool m_isDebugging = false;
+	public GameObject m_debugPanel;
 
 
 	public bool m_onAI = false;
@@ -156,28 +160,26 @@ public class GameController : MonoBehaviour {
 
 	void PlayerInput() {
 
-		if ((Input.GetButton ("MoveRight") && Time.time > m_timeToNextKeyLeftRight) || Input.GetButtonDown("MoveRight")) {
+		if ((Input.GetButton ("MoveRight") && Time.time > m_timeToNextKeyLeftRight) || Input.GetButtonDown ("MoveRight")) {
 			m_activeShape.MoveRight ();
 			m_timeToNextKeyLeftRight = Time.time + m_keyRepeatRateLeftRight;
 			if (!m_gameBoard.IsValidPosition (m_activeShape)) {
 				m_activeShape.MoveLeft ();
-				PlaySound (m_soundManager.m_errorSound,0.5f);
+				PlaySound (m_soundManager.m_errorSound, 0.5f);
 			} else {
-				PlaySound (m_soundManager.m_moveSound,0.5f);
+				PlaySound (m_soundManager.m_moveSound, 0.5f);
 			}
-		}
-		else if ((Input.GetButton ("MoveLeft") && Time.time > m_timeToNextKeyLeftRight) || Input.GetButtonDown("MoveLeft")) {
+		} else if ((Input.GetButton ("MoveLeft") && Time.time > m_timeToNextKeyLeftRight) || Input.GetButtonDown ("MoveLeft")) {
 			m_activeShape.MoveLeft ();
 			m_timeToNextKeyLeftRight = Time.time + m_keyRepeatRateLeftRight;
 			if (!m_gameBoard.IsValidPosition (m_activeShape)) {
 				m_activeShape.MoveRight ();
-				PlaySound (m_soundManager.m_errorSound,0.5f);
+				PlaySound (m_soundManager.m_errorSound, 0.5f);
 			} else {
-				PlaySound (m_soundManager.m_moveSound,0.5f);
+				PlaySound (m_soundManager.m_moveSound, 0.5f);
 			}
-		}
-		else if (Input.GetButtonDown ("Rotate") && Time.time > m_timeToNextKeyRotate) {
-			m_activeShape.RotateClockwise(m_clockwise);
+		} else if (Input.GetButtonDown ("Rotate") && Time.time > m_timeToNextKeyRotate) {
+			m_activeShape.RotateClockwise (m_clockwise);
 			m_timeToNextKeyRotate = Time.time + m_keyRepeatRateRotate;
 			m_currentOffset = 0;
 
@@ -214,13 +216,13 @@ public class GameController : MonoBehaviour {
 					m_activeShape.MoveLeft ();
 					m_activeShape.MoveLeft ();
 				}
-				m_activeShape.RotateClockwise(!m_clockwise);
+				m_activeShape.RotateClockwise (!m_clockwise);
 				PlaySound (m_soundManager.m_errorSound, 0.5f);
 			} else {
-				PlaySound (m_soundManager.m_moveSound,0.5f);
+				PlaySound (m_soundManager.m_moveSound, 0.5f);
 			}
 		
-		} else if ((Input.GetButton("MoveDown") && (Time.time > m_timeToNextKeyDown)) || (Time.time > m_timeToDrop)) {
+		} else if ((Input.GetButton ("MoveDown") && (Time.time > m_timeToNextKeyDown)) || (Time.time > m_timeToDrop)) {
 			m_timeToDrop = Time.time + m_dropIntervalModded;
 			m_timeToNextKeyDown = Time.time + m_keyRepeatRateDown;
 			m_activeShape.MoveDown ();
@@ -233,7 +235,7 @@ public class GameController : MonoBehaviour {
 				}
 			}
 
-		/* probably we can use the below code in place of the above one if we decide to allow the users to control the blocks while on AUTO mode
+			/* probably we can use the below code in place of the above one if we decide to allow the users to control the blocks while on AUTO mode
 		 * 
 		} else if ((!m_onAI) && ((Input.GetButton("MoveDown") && (Time.time > m_timeToNextKeyDown)) || (Time.time > m_timeToDrop))) {
 			m_timeToDrop = Time.time + m_dropIntervalModded;
@@ -262,7 +264,7 @@ public class GameController : MonoBehaviour {
 			}
 		*/
 
-		} else if (Input.GetButtonDown("MoveDownHard") && Time.time > m_timeToNextKeyDown) {
+		} else if (Input.GetButtonDown ("MoveDownHard") && Time.time > m_timeToNextKeyDown) {
 
 			m_timeToDrop = Time.time + m_dropIntervalModded;
 			m_timeToNextKeyDown = Time.time + m_keyRepeatRateDown;
@@ -278,12 +280,14 @@ public class GameController : MonoBehaviour {
 					LandShape ();
 				}
 			}
-		} else if (Input.GetButtonDown("ToggleRot")) {
+		} else if (Input.GetButtonDown ("ToggleRot")) {
 			ToggleRotDirection ();
-		} else if (Input.GetButtonDown("Pause")) {
+		} else if (Input.GetButtonDown ("Pause")) {
 			TogglePause ();
-		}else if (Input.GetButtonDown("Hold")) {
+		} else if (Input.GetButtonDown ("Hold")) {
 			Hold ();
+		} else if (Input.GetButtonDown ("Debug")) {
+			ToggleDebug ();
 		}
 
 	}
@@ -424,6 +428,69 @@ public class GameController : MonoBehaviour {
 		if (m_autoIconToggle) {
 			m_autoIconToggle.ToggleIcon (m_autoClockwise);
 		}
+	}
+
+	public void ToggleDebug() {
+		if (m_gameOver) {
+			return;
+		}
+
+		m_isDebugging = !m_isDebugging;
+
+		if (m_debugPanel) {
+			m_debugPanel.SetActive (m_isDebugging);
+
+			if (m_soundManager) {
+				m_soundManager.m_musicSource.volume = (m_isDebugging) ? m_soundManager.m_musicVolume * 0.25f : m_soundManager.m_musicVolume;
+			}
+
+			Time.timeScale = (m_isDebugging) ? 0 : 1;
+		}
+	}
+
+	public void getMoveSet(){ //note xpos is 1 + column index i.e. xpos go from 1 to 10 (not 0 to 9)
+		int degree = 90 * m_debugPanel.transform.Find("DegreeDropdown").GetComponent<Dropdown>().value;
+		int xpos = 1 + m_debugPanel.transform.Find ("XPosDropdown").GetComponent<Dropdown> ().value;
+		string[] moves = new string[8];
+		int curr_index = 0;
+		if (degree == 90) {
+			moves [curr_index] = "RotateRight";
+			curr_index++;
+		} else if (degree == 180) {
+			moves [curr_index] = "RotateRight";
+			moves [curr_index+1] = "RotateRight";
+			curr_index += 2;
+		} else if (degree == 270) {
+			moves [curr_index] = "RotateLeft";
+			curr_index++;
+		} else {
+			//do nothing
+		}
+
+		if (xpos < 5) {
+			for (int i = 4; i >= 1; i--) {
+				moves [curr_index] = "MoveLeft";
+				curr_index++;
+				if (xpos == i) {
+					break;
+				}
+			}
+		} else if (xpos > 5) {
+			for (int j = 6; j <= 10; j++) {
+				moves [curr_index] = "MoveRight";
+				curr_index++;
+				if (xpos == j) {
+					break;
+				}
+			}
+		} else {
+			//do nothing
+		}
+
+		for(int i = 0; i < curr_index; i++){
+			print (moves[i]);
+		}
+		//return moves;
 	}
 
 }
