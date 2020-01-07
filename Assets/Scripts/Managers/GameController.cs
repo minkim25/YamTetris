@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
 using UnityEngine.UI;
+using System;
 
 public class GameController : MonoBehaviour {
 
@@ -59,6 +60,10 @@ public class GameController : MonoBehaviour {
 	int m_currentOffset;
 
 	public int[,] m_gridArray;
+
+	string[] m_autoMoves;
+	bool m_autoFlag = false;
+	int iAuto = 0;
 
 
 	// Use this for initialization
@@ -122,27 +127,46 @@ public class GameController : MonoBehaviour {
 			//code for AUTO PLAY
 			//Debug.Log ("AI turned on");
 
-			//we can initially use this for training
-			TrainAI ();
+			if (m_autoFlag == false) {
+				m_autoMoves = getMoveSet (1, 7);
+				m_autoFlag = true;
+			}
+				
+			if (m_autoMoves [iAuto] == "RotateRight") {
+				m_activeShape.RotateRight();
+			} else if (m_autoMoves [iAuto] == "RotateLeft") {
+				m_activeShape.RotateLeft();
+			} else if (m_autoMoves [iAuto] == "MoveRight") {
+				m_activeShape.MoveRight();
+			} else if (m_autoMoves [iAuto] == "MoveLeft") {
+				m_activeShape.MoveLeft();
+			} else {
+				while (m_gameBoard.IsValidPosition (m_activeShape)) {
+					m_activeShape.MoveDown ();
+				}
 
-			//once we finish training, we can use the below function for the actual AUTO PLAY mode
-			//PlayAI ();
+				iAuto = -1;
+
+				if (!m_gameBoard.IsValidPosition (m_activeShape)) {
+					m_autoFlag = false;
+					if (m_gameBoard.IsOverLimit (m_activeShape)) {
+						GameOver ();
+					} else {
+						LandShape ();
+					}
+				}
+			}
+
+			DateTime dt = DateTime.Now + TimeSpan.FromSeconds(0.1);
+			do {
+			} while (DateTime.Now < dt);
+
+			iAuto++;
 
 		} else {
 			PlayerInput ();
+			m_autoFlag = false;
 		}
-	}
-
-	void TrainAI() {
-
-
-		//save final model
-	}
-
-	void PlayAI() {
-		//load saved model
-
-
 	}
 
 	void PlaySound (AudioClip clip, float volMultiplier)
@@ -448,9 +472,13 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
-	public void getMoveSet(){ //note xpos is 1 + column index i.e. xpos go from 1 to 10 (not 0 to 9)
-		int degree = 90 * m_debugPanel.transform.Find("DegreeDropdown").GetComponent<Dropdown>().value;
-		int xpos = 1 + m_debugPanel.transform.Find ("XPosDropdown").GetComponent<Dropdown> ().value;
+	public string[] getMoveSet(int deg, int xpo){ //note xpos is 1 + column index i.e. xpos go from 1 to 10 (not 0 to 9)
+		//int degree = 90 * m_debugPanel.transform.Find("DegreeDropdown").GetComponent<Dropdown>().value;
+		//int xpos = 1 + m_debugPanel.transform.Find ("XPosDropdown").GetComponent<Dropdown> ().value;
+
+		int degree = 90 * deg;
+		int xpos = 1 + xpo;
+
 		string[] moves = new string[8];
 		int curr_index = 0;
 		if (degree == 90) {
@@ -488,9 +516,9 @@ public class GameController : MonoBehaviour {
 		}
 
 		for(int i = 0; i < curr_index; i++){
-			print (moves[i]);
+			//print (moves[i]);
 		}
-		//return moves;
+		return moves;
 	}
 
 }
